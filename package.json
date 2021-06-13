@@ -1,0 +1,20 @@
+{
+  "name": "discord-bot-nottom",
+  "version": "1.0.0",
+  "description": "bot do discord criado com intuito de aprendizado",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bot",
+    "discord",
+    "learning"
+  ],
+  "author": "Tomas Xavier Santos <txs@ecomp.poli.br>",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0"
+  }
+}
