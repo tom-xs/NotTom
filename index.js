@@ -11,7 +11,7 @@ client.login(process.env.DiscordTOKEN);
 
 //Prefixo dos comandos no discord
 const prefix = './';
-const channelID = "797398583338205194";
+var channelID = "797398583338205194";
 
 
 //________começo do telegram________
@@ -37,9 +37,10 @@ client.on("message", function(message){
     const args = commandBody.split(' ');
     const commando = args.shift().toLowerCase();
     
-    if(commando == "setTextChannel"){
+    if(commando == "settelchan"){
         //define o canal de texto como o canal principal das mensagens
-        //TODO
+        channelID = message.channel.id;
+        console.log(message.channel.id);
     }
     if(commando === "ping"){
         const timeTaken = Date.now() - message.createdTimestamp;
