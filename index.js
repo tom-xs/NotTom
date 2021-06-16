@@ -23,8 +23,12 @@ bot.onText(/\/toDisc(.+)/ ,(msg, match) => {
     
     //Envia mensagem para o discord
     channel = client.channels.cache.get(channelID);
-    channel.send(resp)
-     
+    const d = new Date(msg.date);
+    const dateFormat = formatDate(d);
+    var reply = msg.from.username+" ["+dateFormat+"]: "+resp;
+    channel.send(reply);
+
+    
     bot.sendMessage(chatId, resp);
 });
 
@@ -39,17 +43,18 @@ client.on("message", function(message){
     
     if(commando == "settelchan"){
         //define o canal de texto como o canal principal das mensagens
+        //console.log(message.channel.id);
         channelID = message.channel.id;
-        console.log(message.channel.id);
     }
     if(commando === "ping"){
         const timeTaken = Date.now() - message.createdTimestamp;
         message.reply('pog! xd ow o ping '+timeTaken+' ms.');
     }
 });
+function formatDate(d){
+    return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2)+" "+("0" + d.getDate()).slice(-2) + "/" + ("0"+(d.getMonth()+1)).slice(-2) + "/" +d.getFullYear(); 
+}
 
-
-//797398583338205194
 //client.once("ready" ,msg =>{
 //    console.log(client.channels.cache)
 //})
