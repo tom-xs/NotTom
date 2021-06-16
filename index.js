@@ -16,7 +16,7 @@ var channelID = "797398583338205194";
 
 //________começo do telegram________
 //comando /toDisc manda mensagem para o discord, para o canal do id acima
-bot.onText(/\/toDisc(.+)/ ,(msg, match) => {
+bot.onText(/(.+)/ ,(msg, match) => {
 
     const chatId = msg.chat.id;
     const resp = match[1]; 
