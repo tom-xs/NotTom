@@ -15,11 +15,9 @@ var channelID = "797398583338205194";
 
 
 //________começo do telegram________
-bot.onText(/(.+)/ ,(msg, match) => {
+//metodo para repassar texto
+bot.on("text" ,msg => {
 
-    const chatId = msg.chat.id;
-    const resp = match[1]; 
-    
     //define canal do discord que a mensagem será mandada
     channel = client.channels.cache.get(channelID);
     
@@ -28,12 +26,29 @@ bot.onText(/(.+)/ ,(msg, match) => {
     const dateFormat = formatDate(d);
     
     //envia mensagem
-    var reply = msg.from.username+" ["+dateFormat+"]: "+resp;
+    var reply = msg.from.username+" ["+dateFormat+"]: "+ msg.text;
     channel.send(reply);
 
-    
-    bot.sendMessage(chatId, resp);
 });
+
+//metodo para repassar imagens
+bot.on("photo" ,file => {
+    
+    //define o canal do disc que a imagem será mandada
+    channel = client.channels.cache.get(channelID);
+
+    //define o id da imagem
+    image_id = file.photo[0].file_id;
+
+    //gera link pra baixar imagem
+    //primeiro pegar o path com o getFile dps pegar o arquivo com o file
+    //TODO entender como funciona a requisição de imagem da api do telegram com node
+
+    path = file.getFile(image_id);
+    console.log(path);
+    
+
+})
 
 //_______ começo do discord_________
 client.on("message", function(message){
