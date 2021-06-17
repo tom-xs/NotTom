@@ -15,16 +15,19 @@ var channelID = "797398583338205194";
 
 
 //________começo do telegram________
-//comando /toDisc manda mensagem para o discord, para o canal do id acima
 bot.onText(/(.+)/ ,(msg, match) => {
 
     const chatId = msg.chat.id;
     const resp = match[1]; 
     
-    //Envia mensagem para o discord
+    //define canal do discord que a mensagem será mandada
     channel = client.channels.cache.get(channelID);
+    
+    //formatação da data
     const d = new Date(msg.date);
     const dateFormat = formatDate(d);
+    
+    //envia mensagem
     var reply = msg.from.username+" ["+dateFormat+"]: "+resp;
     channel.send(reply);
 
