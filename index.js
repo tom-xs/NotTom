@@ -16,6 +16,7 @@ var channelID = "797398583338205194";
 
 //________começo do telegram________
 //metodo para repassar texto
+//TODO: descobrir como hospedar o bot e manter ele ativo
 bot.on("text" ,msg => {
 
     //define canal do discord que a mensagem será mandada
@@ -37,10 +38,10 @@ bot.on("photo" ,file => {
     //define o canal do disc que a imagem será mandada
     channel = client.channels.cache.get(channelID);
     
-    //se a mensagem tiver legenda adiciona ela junto com o discord
+    //legenda da mensagem
     legenda = file.caption;
 
-    //define o id da imagem
+    //pega o id da imagem com melhor resolução
     image_id = file.photo.slice(-1).pop().file_id;
     
     //data e hora da mensagem
