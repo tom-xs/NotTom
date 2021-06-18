@@ -33,20 +33,25 @@ bot.on("text" ,msg => {
 
 //metodo para repassar imagens
 bot.on("photo" ,file => {
-    
+    console.log(file);
     //define o canal do disc que a imagem será mandada
     channel = client.channels.cache.get(channelID);
+    
+    //se a mensagem tiver legenda adiciona ela junto com o discord
+    legenda = file.caption;
 
     //define o id da imagem
-    image_id = file.photo[0].file_id;
-
-    //gera link pra baixar imagem
-    //primeiro pegar o path com o getFile dps pegar o arquivo com o file
-    //TODO entender como funciona a requisição de imagem da api do telegram com node
-
-    path = file.getFile(image_id);
-    console.log(path);
+    image_id = file.photo.slice(-1).pop().file_id;
     
+    //data e hora da mensagem
+    const d = new Date(file.date);
+    const dateFormat = formatDate(d);
+
+    //gera e envia imagem para discord
+    file_path = bot.getFileLink(image_id).then(fileLink=> {
+        reply = file.from.username+" ["+dateFormat+"]: "+(legenda == undefined ? "":legenda);
+        channel.send( reply, {files:[fileLink]});        
+    });
 
 })
 
