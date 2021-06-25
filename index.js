@@ -6,7 +6,7 @@ const express = require('express');
 const client = new Discord.Client();
 
 
-//criar servidor
+// Criar servidor
 const app = express();
 
 app.get("/", (req, res) => res.send("dale man "));
@@ -14,57 +14,59 @@ app.get("/", (req, res) => res.send("dale man "));
 app.listen(3000, () => console.log("ouvindo "));
 
 
-//Acessando os TOKENS das api's
+// Acessando os TOKENS das api's
 const bot = new TelegramBot(process.env.TelegramTOKEN, { polling: true });
 client.login(process.env.DiscordTOKEN);
 
-//Prefixo dos comandos no discord
+// Prefixo dos comandos no discord
 const prefix = './';
 var channelID = "797398583338205194";
 
 
 //________começo do telegram________
-//metodo para repassar texto
+// Metodo para repassar texto
 
-//repassa mensagem para o canal do discord com id especificado
+// Repassa mensagem para o canal do discord com id especificado
 function fowardMessage(msg, channelID){
-	//define o objeto canal com o respectivo ID
+	// Define o objeto canal com o respectivo ID
 	channel = client.channels.cache.get(channelID);
 
-	//trata username
+	// Trata username
 	const username = msg.from.username == undefined ? msg.from.first_name : msg.from.username;
 
 
-	//formatação da data
+	// Formatação da data
 	const d = new Date(msg.date*1000);
 	const dateFormat = formatDate(d);
 
 
-	//repassa mensagem
+	// Repassa mensagem
 	
 	if("text" in msg){
-		//envia mensagem
+		// Repassa mensagem(s) de texto
+		
 		var reply = username + " [" + dateFormat + "]: " + msg.text;
 		channel.send(reply);
 	}else{
+		// Repassa mensagems(s) com imagem(s)
 		if("photo" in msg){
-			//adiciona legenda para imagem
+			// Adiciona legenda para imagem
 			legenda = msg.caption;
 
-			//pega o id da imagem com melhor resolução
+			// Pega o id da imagem com melhor resolução
 			image_id = msg.photo.slice(-1).pop().file_id;
 
-			//data e hora da mensagem
+			// Data e hora da mensagem
 			const d = new Date(msg.date*1000);
 			const dateFormat = formatDate(d);
 
-			//gera e envia imagem para discord
+			// Gera e envia imagem para discord
 			bot.getFileLink(image_id).then(fileLink => {
 				reply = username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
 				channel.send(reply, { files: [fileLink] });
 			});			
-
-			console.log("dale");
+		}else{
+			console.log(msg);
 		}
 	}
 
@@ -76,7 +78,6 @@ bot.on("text", msg => {
 	fowardMessage(msg,channelID);
 });
 
-//metodo para repassar imagens
 bot.on("photo", msg => {
 	fowardMessage(msg,channelID);
 })
@@ -92,8 +93,8 @@ client.on("message", function (message) {
 	const commando = args.shift().toLowerCase();
 
 	if (commando == "settelchan") {
-		//define o canal de texto como o canal principal das mensagens
-		//console.log(message.channel.id);
+		// Define o canal de texto como o canal principal das mensagens
+		// Console.log(message.channel.id);
 		channelID = message.channel.id;
 	}
 	if (commando === "ping") {
@@ -104,7 +105,3 @@ client.on("message", function (message) {
 function formatDate(d) {
 	return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + " " + ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
 }
-
-//client.once("ready" ,msg =>{
-//    console.log(client.channels.cache)
-//})
