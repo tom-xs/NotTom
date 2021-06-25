@@ -9,9 +9,9 @@ const client = new Discord.Client();
 //criar servidor
 const app = express();
 
-app.get("/",(req,res)=> res.send("dale man "));
+app.get("/", (req, res) => res.send("dale man "));
 
-app.listen(3000, ()=>console.log("ouvindo " ));
+app.listen(3000, () => console.log("ouvindo "));
 
 
 //Acessando os TOKENS das api's
@@ -28,64 +28,64 @@ var channelID = "797398583338205194";
 //TODO: descobrir como hospedar o bot e manter ele ativo
 bot.on("text", msg => {
 
-  //define canal do discord que a mensagem será mandada
-  channel = client.channels.cache.get(channelID);
+	//define canal do discord que a mensagem será mandada
+	channel = client.channels.cache.get(channelID);
 
-  //formatação da data
-  const d = new Date(msg.date);
-  const dateFormat = formatDate(d);
+	//formatação da data
+	const d = new Date(msg.date);
+	const dateFormat = formatDate(d);
 
-  //envia mensagem
-  var reply = msg.from.username + " [" + dateFormat + "]: " + msg.text;
-  channel.send(reply);
+	//envia mensagem
+	var reply = msg.from.username + " [" + dateFormat + "]: " + msg.text;
+	channel.send(reply);
 
 });
 
 //metodo para repassar imagens
 bot.on("photo", file => {
-  console.log(file);
-  //define o canal do disc que a imagem será mandada
-  channel = client.channels.cache.get(channelID);
+	console.log(file);
+	//define o canal do disc que a imagem será mandada
+	channel = client.channels.cache.get(channelID);
 
-  //legenda da mensagem
-  legenda = file.caption;
+	//legenda da mensagem
+	legenda = file.caption;
 
-  //pega o id da imagem com melhor resolução
-  image_id = file.photo.slice(-1).pop().file_id;
+	//pega o id da imagem com melhor resolução
+	image_id = file.photo.slice(-1).pop().file_id;
 
-  //data e hora da mensagem
-  const d = new Date(file.date);
-  const dateFormat = formatDate(d);
+	//data e hora da mensagem
+	const d = new Date(file.date);
+	const dateFormat = formatDate(d);
 
-  //gera e envia imagem para discord
-  file_path = bot.getFileLink(image_id).then(fileLink => {
-    reply = file.from.username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
-    channel.send(reply, { files: [fileLink] });
-  });
+	//gera e envia imagem para discord
+	file_path = bot.getFileLink(image_id).then(fileLink => {
+		reply = file.from.username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
+		channel.send(reply, { files: [fileLink] });
+	});
 
 })
 
 //_______ começo do discord_________
 client.on("message", function (message) {
-  if (message.author.bot) return;
-  if (!message.content.startsWith(prefix)) return;
+	if (message.author.bot) return;
+	if (!message.content.startsWith(prefix)) return;
 
-  const commandBody = message.content.slice(prefix.length);
-  const args = commandBody.split(' ');
-  const commando = args.shift().toLowerCase();
+	const commandBody = message.content.slice(prefix.length);
+	const args = commandBody.split(' ');
+	const commando = args.shift().toLowerCase();
 
-  if (commando == "settelchan") {
-    //define o canal de texto como o canal principal das mensagens
-    //console.log(message.channel.id);
-    channelID = message.channel.id;
-  }
-  if (commando === "ping") {
-    const timeTaken = Date.now() - message.createdTimestamp;
-    message.reply('pog! xd ow o ping ' + timeTaken + ' ms.');
-  }
+	if (commando == "settelchan") {
+		//define o canal de texto como o canal principal das mensagens
+		//console.log(message.channel.id);
+		channelID = message.channel.id;
+	}
+	if (commando === "ping") {
+		const timeTaken = Date.now() - message.createdTimestamp;
+		message.reply('pog! xd ow o ping ' + timeTaken + ' ms.');
+	}
 });
 function formatDate(d) {
-  return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + " " + ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
+	return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + " " + ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
 }
 
 //client.once("ready" ,msg =>{
