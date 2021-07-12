@@ -37,6 +37,7 @@ bot.on("text", msg => {
 });
 
 bot.on("photo", msg => {
+	console.log(msg);
 	// Pega informação
 	const [username, channel, dateFormat] = getInfos(msg,channelID);
 
@@ -48,6 +49,24 @@ bot.on("photo", msg => {
 
 	// Gera e envia imagem para discord
 	bot.getFileLink(image_id).then(fileLink => {
+		reply = username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
+		channel.send(reply, { files: [fileLink] });
+	});
+});
+
+bot.on("document", msg => {
+	const [username, channel, dateFormat] = getInfos(msg,channelID);
+	console.log(msg);
+
+	// Adiciona legenda para o documento
+	legenda = msg.caption;
+
+	// Pega o id do documento com melhor resolução
+	doc_id = msg.document.file_id;
+	console.log(doc_id);
+
+	// Gera e envia imagem para discord
+	bot.getFileLink(doc_id).then(fileLink => {
 		reply = username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
 		channel.send(reply, { files: [fileLink] });
 	});	
