@@ -24,64 +24,37 @@ var channelID = "797398583338205194";
 
 
 //________começo do telegram________
-// Metodo para repassar texto
-
-// Repassa mensagem para o canal do discord com id especificado
-function fowardMessage(msg, channelID){
-	// Define o objeto canal com o respectivo ID
-	channel = client.channels.cache.get(channelID);
-
-	// Trata username
-	const username = msg.from.username == undefined ? msg.from.first_name : msg.from.username;
 
 
-	// Formatação da data
-	const d = new Date(msg.date*1000);
-	const dateFormat = formatDate(d);
-
-
-	// Repassa mensagem
-	
-	if("text" in msg){
-		// Repassa mensagem(s) de texto
-		
-		var reply = username + " [" + dateFormat + "]: " + msg.text;
-		channel.send(reply);
-	}else{
-		// Repassa mensagems(s) com imagem(s)
-		if("photo" in msg){
-			// Adiciona legenda para imagem
-			legenda = msg.caption;
-
-			// Pega o id da imagem com melhor resolução
-			image_id = msg.photo.slice(-1).pop().file_id;
-
-			// Data e hora da mensagem
-			const d = new Date(msg.date*1000);
-			const dateFormat = formatDate(d);
-
-			// Gera e envia imagem para discord
-			bot.getFileLink(image_id).then(fileLink => {
-				reply = username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
-				channel.send(reply, { files: [fileLink] });
-			});			
-		}else{
-			console.log(msg);
-		}
-	}
-
-
-}
 
 bot.on("text", msg => {
-	console.log(msg);
-	fowardMessage(msg,channelID);
+	// Pega informação
+	const [username, channel, dateFormat] = getInfos(msg,channelID);
+
+	// Repassa mensagem
+	var reply = username + " [" + dateFormat + "]: " + msg.text;
+	channel.send(reply);
 });
 
 bot.on("photo", msg => {
-	fowardMessage(msg,channelID);
-})
+	// Pega informação
+	const [username, channel, dateFormat] = getInfos(msg,channelID);
 
+	// Adiciona legenda para imagem
+	legenda = msg.caption;
+
+	// Pega o id da imagem com melhor resolução
+	image_id = msg.photo.slice(-1).pop().file_id;
+
+	// Gera e envia imagem para discord
+	bot.getFileLink(image_id).then(fileLink => {
+		reply = username + " [" + dateFormat + "]: " + (legenda == undefined ? "" : legenda);
+		channel.send(reply, { files: [fileLink] });
+	});	
+});
+
+// Printa mensagens de erro no console
+bot.on("polling_error", console.log);
 
 //_______ começo do discord_________
 client.on("message", function (message) {
@@ -92,16 +65,47 @@ client.on("message", function (message) {
 	const args = commandBody.split(' ');
 	const commando = args.shift().toLowerCase();
 
-	if (commando == "settelchan") {
+	if (commando === "settelchan") {
 		// Define o canal de texto como o canal principal das mensagens
-		// Console.log(message.channel.id);
+		message.reply('este é o novo canal de texto do bot');
 		channelID = message.channel.id;
+
 	}
 	if (commando === "ping") {
 		const timeTaken = Date.now() - message.createdTimestamp;
 		message.reply('pog! xd ow o ping ' + timeTaken + ' ms.');
 	}
 });
-function formatDate(d) {
-	return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + " " + ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
+
+// Pega usuario, client do Discord que vai receber a mensagem e sua data/hora
+function getInfos(msg, channelID){
+	// Define o objeto canal com o respectivo ID
+	channel = client.channels.cache.get(channelID);
+
+	// Trata username
+	const username = msg.from.username == undefined ? (msg.from.last_name != undefined? msg.from.first_name+" "+msg.from.last_name :msg.from.first_name): msg.from.username;
+
+
+	// Formatação da data
+	const d = new Date(msg.date*1000);
+	const dateFormat = formatDate(d);
+
+	// Repassa mensagem
+	return [username, channel, dateFormat];
+	
+	if("text" in msg){
+		// Repassa mensagem(s) de texto
+		
+		var reply = username + " [" + dateFormat + "]: " + msg.text;
+		channel.send(reply);
+	}else{
+		// Repassa mensagems(s) com imagem(s)
+		if("photo" in msg){
+					
+		}else{
+			console.log(msg);
+		}
+	}
 }
+function formatDate(d) {
+	return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + " " + ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();}
