@@ -92,20 +92,8 @@ function getInfos(msg, channelID){
 
 	// Repassa mensagem
 	return [username, channel, dateFormat];
-	
-	if("text" in msg){
-		// Repassa mensagem(s) de texto
-		
-		var reply = username + " [" + dateFormat + "]: " + msg.text;
-		channel.send(reply);
-	}else{
-		// Repassa mensagems(s) com imagem(s)
-		if("photo" in msg){
-					
-		}else{
-			console.log(msg);
-		}
-	}
 }
+
+// Formata data
 function formatDate(d) {
 	return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + " " + ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();}
